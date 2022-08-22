@@ -25,7 +25,7 @@ exports.npmu = (cb) => npmu([
     path: join(__dirname, '../re-rule'), packageName: '@franzzemen/re-rule',
   }, {
     path: join(__dirname, '../re-rule-set'), packageName: '@franzzemen/re-rule-set',
-  },, {
+  }, {
     path: join(__dirname, './'), packageName: '@franzzemen/re-application',
   }])
   .then(() => {

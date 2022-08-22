@@ -1,6 +1,6 @@
 {
   "name": "@franzzemen/re-application",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -31,13 +31,13 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@franzzemen/re-common": "0.0.45",
-    "@franzzemen/re-condition": "0.0.13",
-    "@franzzemen/re-data-type": "0.0.24",
-    "@franzzemen/re-expression": "0.0.14",
-    "@franzzemen/re-logical-condition": "0.0.9",
-    "@franzzemen/re-rule": "0.0.6",
-    "@franzzemen/re-rule-set": "0.0.6",
+    "@franzzemen/re-common": "0.0.47",
+    "@franzzemen/re-condition": "0.0.14",
+    "@franzzemen/re-data-type": "0.0.27",
+    "@franzzemen/re-expression": "0.0.16",
+    "@franzzemen/re-logical-condition": "0.0.11",
+    "@franzzemen/re-rule": "0.0.8",
+    "@franzzemen/re-rule-set": "0.0.8",
     "fastest-validator": "^1.13.0",
     "moment": "^2.29.4",
     "object-path": "^0.11.8",
