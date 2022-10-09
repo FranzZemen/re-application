@@ -1,1 +1,1 @@
-export * from './application-parser';
+export * from './application-parser.js';

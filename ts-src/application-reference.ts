@@ -1,7 +1,7 @@
 import {NamedReference} from '@franzzemen/re-common';
 import {RuleSetReference} from '@franzzemen/re-rule-set';
-import {Application} from './application';
-import {ApplicationOptions} from './scope/application-options';
+import {Application} from './application.js';
+import {ApplicationOptions} from './scope/application-options.js';
 
 export const DefaultApplicationName = 'Default';
 

@@ -1,9 +1,9 @@
 import {ExecutionContextI} from '@franzzemen/app-utility';
 import {RuleSetStringifier} from '@franzzemen/re-rule-set';
-import {ApplicationReference} from '../application-reference';
-import {ApplicationScope} from '../scope/application-scope';
-import {ApplicationHintKey} from '../util/application-hint-key';
-import {StringifyApplicationOptions} from './stringify-application-options';
+import {ApplicationReference} from '../application-reference.js';
+import {ApplicationScope} from '../scope/application-scope.js';
+import {ApplicationHintKey} from '../util/application-hint-key.js';
+import {StringifyApplicationOptions} from './stringify-application-options.js';
 
 export class ApplicationStringifier {
   constructor() {

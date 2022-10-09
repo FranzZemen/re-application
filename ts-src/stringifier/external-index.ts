@@ -1,3 +1,3 @@
-export * from './stringify-application-options';
-export * from './application-stringifier';
+export * from './stringify-application-options.js';
+export * from './application-stringifier.js';
 

@@ -1,12 +1,12 @@
 import {ExecutionContextI, Hints, LoggerAdapter} from '@franzzemen/app-utility';
-import {Scope} from '@franzzemen/re-common';
+import {ParserMessages, Scope} from '@franzzemen/re-common';
 import {RuleContainerParser} from '@franzzemen/re-rule';
 import {RuleSetParser, RuleSetReference} from '@franzzemen/re-rule-set';
 
-import {ApplicationReference} from '../application-reference';
-import {ApplicationOptions} from '../scope/application-options';
-import {ApplicationScope} from '../scope/application-scope';
-import {ApplicationHintKey} from '../util/application-hint-key';
+import {ApplicationReference} from '../application-reference.js';
+import {ApplicationOptions} from '../scope/application-options.js';
+import {ApplicationScope} from '../scope/application-scope.js';
+import {ApplicationHintKey} from '../util/application-hint-key.js';
 
 export class ApplicationParser extends RuleContainerParser<ApplicationReference> {
   constructor() {
@@ -21,7 +21,7 @@ export class ApplicationParser extends RuleContainerParser<ApplicationReference>
     return {refName, options, ruleSets: []};
   }
 
-  protected delegateParsing(ref: ApplicationReference, near: string, scope: ApplicationScope, ec?: ExecutionContextI): string {
+  protected delegateParsing(ref: ApplicationReference, near: string, scope: ApplicationScope, ec?: ExecutionContextI): [string, ParserMessages] {
     const log = new LoggerAdapter(ec, 'rules-engine', 'application-parser', 'delegateParsing');
     let remaining = near;
 
@@ -43,6 +43,6 @@ export class ApplicationParser extends RuleContainerParser<ApplicationReference>
         break;
       }
     }
-    return remaining;
+    return [remaining, undefined];
   }
 }

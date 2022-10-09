@@ -1,2 +1,2 @@
-export * from './application-options';
-export * from './application-scope';
+export * from './application-options.js';
+export * from './application-scope.js';
