@@ -1,7 +1,7 @@
 import {ExecutionContextI, Hints, LoggerAdapter} from '@franzzemen/app-utility';
 import {ParserMessages, Scope} from '@franzzemen/re-common';
-import {RuleContainerParser} from '@franzzemen/re-rule';
-import {RuleSetParser, RuleSetReference} from '@franzzemen/re-rule-set';
+import {DelegateOptions, RuleContainerParser} from '@franzzemen/re-rule';
+import {_mergeRuleSetOptions, RuleSetParser, RuleSetReference} from '@franzzemen/re-rule-set';
 
 import {ApplicationReference} from '../application-reference.js';
 import {ApplicationOptions} from '../scope/application-options.js';
@@ -28,8 +28,14 @@ export class ApplicationParser extends RuleContainerParser<ApplicationReference>
     // Consume the remaining text as long as rule sets are returned.
     while(remaining.length > 0) {
       const parser: RuleSetParser = new RuleSetParser();
-      let ruleSetRef: RuleSetReference;
-      [remaining, ruleSetRef] = parser.parse(remaining, scope, ec);
+      let ruleSetRef: RuleSetReference, parseMessages: ParserMessages;
+
+      let delegateOptions: DelegateOptions;
+      let overrides = (scope?.options as ApplicationOptions)?.ruleSetOptionOverrides;
+      if(overrides && overrides.length > 0) {
+        delegateOptions = {mergeFunction: _mergeRuleSetOptions, overrides: overrides}
+      }
+      [remaining, ruleSetRef, parseMessages] = parser.parse(remaining, delegateOptions, scope, ec);
       if(ruleSetRef) {
         ref.ruleSets.push(ruleSetRef);
       }

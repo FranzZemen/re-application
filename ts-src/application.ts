@@ -1,10 +1,19 @@
 import {ExecutionContextI, LoggerAdapter} from '@franzzemen/app-utility';
+import {logErrorAndThrow} from '@franzzemen/app-utility/enhanced-error.js';
 import {RuleElementFactory, RuleElementReference} from '@franzzemen/re-common';
-import {isRuleSet, RuleSet, RuleSetResult, RuleSetScope} from '@franzzemen/re-rule-set';
+import {_mergeRuleOptions, RuleOptionOverrides, RuleOptions} from '@franzzemen/re-rule';
+import {
+  _mergeRuleSetOptions,
+  isRuleSet,
+  RuleSet,
+  RuleSetOptions,
+  RuleSetResult,
+  RuleSetScope
+} from '@franzzemen/re-rule-set';
 import {isPromise} from 'node:util/types';
 import {ApplicationReference} from './application-reference.js';
 import {ApplicationParser} from './parser/application-parser.js';
-import {ApplicationOptions} from './scope/application-options.js';
+import {_mergeApplicationOptions, ApplicationOptions} from './scope/application-options.js';
 import {ApplicationScope} from './scope/application-scope.js';
 
 export function isApplication(app: ApplicationReference | Application | string): app is Application {
@@ -24,13 +33,39 @@ export class Application extends RuleElementFactory<RuleSet> {
   refName: string;
   scope: ApplicationScope;
 
-  constructor(ref: ApplicationReference, thisScope: ApplicationScope, ec?: ExecutionContextI) {
+  constructor(ref: ApplicationReference, thisScope?: ApplicationScope, ec?: ExecutionContextI) {
     super();
-    this.scope = thisScope;
+    // Which scope?
+    this.scope = ref.loadedScope ? ref.loadedScope : thisScope ? thisScope : undefined;
+    if (!this.scope) {
+      logErrorAndThrow(`Scope not provided for refName ${ref.refName}`, new LoggerAdapter(ec, 're-rule-set', 'rule-set', 'constructor'), ec);
+    }
     this.refName = ref.refName;
+
+    const appRuleSetOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ApplicationOptions).ruleSetOptionOverrides;
+    const appRuleOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ApplicationOptions).ruleOptionOverrides;
     ref.ruleSets.forEach(ruleSetRef => {
-      const ruleSetScope = new RuleSetScope(this.scope.options, this.scope, ec);
-      const ruleSet = new RuleSet(ruleSetRef, ruleSetScope, ec);
+      let ruleSet: RuleSet;
+      if (!ref.loadedScope) {
+        let ruleSetOptions: RuleSetOptions = _mergeRuleSetOptions({}, this.scope.options, true);
+        const ruleSetOverrideOptions: RuleSetOptions = appRuleSetOptionOverrides.find(item => item.refName === ruleSetRef.refName)?.options;
+        if (ruleSetOverrideOptions) {
+          ruleSetOptions = _mergeRuleSetOptions(ruleSetOptions, ruleSetOverrideOptions, true);
+        }
+        // But application can also override the rule options...applied after the rule set overrides
+        if (ruleSetOptions?.ruleOptionOverrides) {
+          ruleSetOptions.ruleOptionOverrides.forEach(override => {
+            const appRuleOptions: RuleOptions = appRuleOptionOverrides.find(item => item.refName)?.options;
+            if (appRuleOptions) {
+              override.options = _mergeRuleOptions(override.options, appRuleOptions, true);
+            }
+          });
+        }
+        const ruleSetScope = new RuleSetScope(ruleSetOptions, this.scope, ec);
+        ruleSet = new RuleSet(ruleSetRef, ruleSetScope, ec);
+      } else {
+        ruleSet = new RuleSet(ruleSetRef, undefined, ec);
+      }
       this.addRuleSet(ruleSet, ec);
     });
   }
@@ -45,16 +80,16 @@ export class Application extends RuleElementFactory<RuleSet> {
   static awaitExecution(dataDomain: any, text: string, options?: ApplicationOptions, ec?: ExecutionContextI): ApplicationResult | Promise<ApplicationResult> {
     const log = new LoggerAdapter(ec, 're-application', 'application', 'awaitExecution');
     const parser = new ApplicationParser();
-    let [remaining, ref, applicationScope] = parser.parse(text, undefined, ec);
-    let trueOrPromise = ApplicationScope.resolve(applicationScope, ec);
+    let [remaining, ref, parserMessages] = parser.parse(text, {options, mergeFunction: _mergeApplicationOptions},undefined, ec);
+    let trueOrPromise = ApplicationScope.resolve(ref.loadedScope, ec);
     if (isPromise(trueOrPromise)) {
       return trueOrPromise
         .then(trueVale => {
-          const app = new Application(ref, applicationScope, ec);
+          const app = new Application(ref, ref.loadedScope, ec);
           return app.awaitEvaluation(dataDomain, ec);
         });
     } else {
-      const app = new Application(ref, applicationScope, ec);
+      const app = new Application(ref, ref.loadedScope, ec);
       return app.awaitEvaluation(dataDomain, ec);
     }
   }
@@ -85,7 +120,7 @@ export class Application extends RuleElementFactory<RuleSet> {
     if (this.repo.has(ruleSet.refName)) {
       throw new Error(`Not adding RuleSet Set to Rules Engine for duplicate refName ${ruleSet.refName}`);
     }
-    ruleSet.scope.reParent(this.scope,ec);
+    ruleSet.scope.reParent(this.scope, ec);
     super.register({instanceRef: {refName: ruleSet.refName, instance: ruleSet}});
   }
 
@@ -95,7 +130,7 @@ export class Application extends RuleElementFactory<RuleSet> {
 
   removeRuleSet(refName: string, ec?: ExecutionContextI) {
     const ruleSet = super.getRegistered(refName, ec);
-    if(ruleSet) {
+    if (ruleSet) {
       ruleSet.scope.removeParent(ec);
       return super.unregister(refName, ec);
     }
