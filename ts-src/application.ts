@@ -42,8 +42,7 @@ export class Application extends RuleElementFactory<RuleSet> {
     }
     this.refName = ref.refName;
 
-    const appRuleSetOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ApplicationOptions).ruleSetOptionOverrides;
-    const appRuleOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ApplicationOptions).ruleOptionOverrides;
+    const appRuleSetOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ApplicationOptions)?.ruleSetOptionOverrides;
     ref.ruleSets.forEach(ruleSetRef => {
       let ruleSet: RuleSet;
       if (!ref.loadedScope) {
@@ -51,15 +50,6 @@ export class Application extends RuleElementFactory<RuleSet> {
         const ruleSetOverrideOptions: RuleSetOptions = appRuleSetOptionOverrides.find(item => item.refName === ruleSetRef.refName)?.options;
         if (ruleSetOverrideOptions) {
           ruleSetOptions = _mergeRuleSetOptions(ruleSetOptions, ruleSetOverrideOptions, true);
-        }
-        // But application can also override the rule options...applied after the rule set overrides
-        if (ruleSetOptions?.ruleOptionOverrides) {
-          ruleSetOptions.ruleOptionOverrides.forEach(override => {
-            const appRuleOptions: RuleOptions = appRuleOptionOverrides.find(item => item.refName)?.options;
-            if (appRuleOptions) {
-              override.options = _mergeRuleOptions(override.options, appRuleOptions, true);
-            }
-          });
         }
         const ruleSetScope = new RuleSetScope(ruleSetOptions, this.scope, ec);
         ruleSet = new RuleSet(ruleSetRef, ruleSetScope, ec);

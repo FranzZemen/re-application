@@ -1,7 +1,7 @@
 import {ExecutionContextI, Hints, LoggerAdapter} from '@franzzemen/app-utility';
 import {ParserMessages, Scope} from '@franzzemen/re-common';
-import {DelegateOptions, RuleContainerParser} from '@franzzemen/re-rule';
-import {_mergeRuleSetOptions, RuleSetParser, RuleSetReference} from '@franzzemen/re-rule-set';
+import {_mergeRuleOptions, DelegateOptions, RuleContainerParser, RuleOptionOverrides} from '@franzzemen/re-rule';
+import {_mergeRuleSetOptions, RuleSetOptions, RuleSetParser, RuleSetReference} from '@franzzemen/re-rule-set';
 
 import {ApplicationReference} from '../application-reference.js';
 import {ApplicationOptions} from '../scope/application-options.js';
@@ -31,9 +31,9 @@ export class ApplicationParser extends RuleContainerParser<ApplicationReference>
       let ruleSetRef: RuleSetReference, parseMessages: ParserMessages;
 
       let delegateOptions: DelegateOptions;
-      let overrides = (scope?.options as ApplicationOptions)?.ruleSetOptionOverrides;
-      if(overrides && overrides.length > 0) {
-        delegateOptions = {mergeFunction: _mergeRuleSetOptions, overrides: overrides}
+      let ruleSetOverrides: RuleOptionOverrides[] = (scope?.options as ApplicationOptions)?.ruleSetOptionOverrides;
+      if(ruleSetOverrides && ruleSetOverrides.length > 0) {
+        delegateOptions = {mergeFunction: _mergeRuleSetOptions, overrides: ruleSetOverrides}
       }
       [remaining, ruleSetRef, parseMessages] = parser.parse(remaining, delegateOptions, scope, ec);
       if(ruleSetRef) {
