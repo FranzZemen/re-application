@@ -85,6 +85,7 @@ export class Application extends RuleElementFactory<RuleSet> {
     if (this.repo.has(ruleSet.refName)) {
       throw new Error(`Not adding RuleSet Set to Rules Engine for duplicate refName ${ruleSet.refName}`);
     }
+    ruleSet.scope.reParent(this.scope,ec);
     super.register({instanceRef: {refName: ruleSet.refName, instance: ruleSet}});
   }
 
@@ -92,8 +93,12 @@ export class Application extends RuleElementFactory<RuleSet> {
     return super.getRegistered(refName, execContext);
   }
 
-  removeRuleSet(refName: string, execContext?: ExecutionContextI) {
-    return super.unregister(refName, execContext);
+  removeRuleSet(refName: string, ec?: ExecutionContextI) {
+    const ruleSet = super.getRegistered(refName, ec);
+    if(ruleSet) {
+      ruleSet.scope.removeParent(ec);
+      return super.unregister(refName, ec);
+    }
   }
 
   getRuleSets(): RuleSet[] {
