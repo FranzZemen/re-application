@@ -27,7 +27,7 @@ export interface ApplicationOptions extends RuleSetOptions {
 
 
 export interface ReApplication extends ReRuleSet {
-  application?: ApplicationOptions;
+  're-application'?: ApplicationOptions;
 }
 
 export interface ApplicationExecutionContext extends RuleSetExecutionContext {
@@ -37,14 +37,14 @@ export interface ApplicationExecutionContext extends RuleSetExecutionContext {
 export class ApplicationExecutionContextDefaults {
   static ApplicationOptions: ApplicationOptions = {};
   static ReApplication: ReApplication = {
-    common: CommonExecutionContextDefaults.CommonOptions,
-    data: DataTypeExecutionContextDefaults.DataTypeOptions,
-    expression: ExpressionExecutionContextDefaults.ExpressionOptions,
-    condition: ConditionExecutionContextDefaults.ConditionOptions,
-    logicalCondition: LogicalConditionExecutionContextDefaults.LogicalConditionOptions,
-    rule: RuleExecutionContextDefaults.RuleOptions,
-    ruleset: RuleSetExecutionContextDefaults.RuleSetOptions,
-    application: ApplicationExecutionContextDefaults.ApplicationOptions
+    're-common': CommonExecutionContextDefaults.CommonOptions,
+    're-data-type': DataTypeExecutionContextDefaults.DataTypeOptions,
+    're-expression': ExpressionExecutionContextDefaults.ExpressionOptions,
+    're-condition': ConditionExecutionContextDefaults.ConditionOptions,
+    're-logical-condition': LogicalConditionExecutionContextDefaults.LogicalConditionOptions,
+    're-rule': RuleExecutionContextDefaults.RuleOptions,
+    're-rule-set': RuleSetExecutionContextDefaults.RuleSetOptions,
+    're-application': ApplicationExecutionContextDefaults.ApplicationOptions
   };
   static ApplicationExecutionContext: ApplicationExecutionContext = {
     execution: ExecutionContextDefaults.Execution(),
@@ -67,14 +67,14 @@ export const applicationOptionsSchemaWrapper = {
 };
 
 const reApplicationSchema = {
-  common: commonOptionsSchemaWrapper,
-  data: dataTypeOptionsSchemaWrapper,
-  expression: expressionOptionsSchemaWrapper,
-  condition: conditionOptionsSchemaWrapper,
-  logicalCondition: logicalConditionOptionsSchemaWrapper,
-  rule: ruleOptionsSchemaWrapper,
-  ruleSet: ruleSetOptionsSchemaWrapper,
-  application: applicationOptionsSchemaWrapper
+  're-common': commonOptionsSchemaWrapper,
+  're-data-type': dataTypeOptionsSchemaWrapper,
+  're-expression': expressionOptionsSchemaWrapper,
+  're-condition': conditionOptionsSchemaWrapper,
+  're-logical-condition': logicalConditionOptionsSchemaWrapper,
+  're-rule': ruleOptionsSchemaWrapper,
+  're-rule-set': ruleSetOptionsSchemaWrapper,
+  're-application': applicationOptionsSchemaWrapper
 };
 
 export const reApplicationSchemaWrapper = {

@@ -31,7 +31,7 @@ export class ApplicationParser extends RuleContainerParser<ApplicationReference>
       let ruleSetRef: RuleSetReference, parseMessages: ParserMessages;
 
       let delegateOptions: DelegateOptions;
-      let ruleSetOverrides: RuleOptionOverrides[] = (scope?.options as ReApplication)?.application?.ruleSetOptionOverrides;
+      let ruleSetOverrides: RuleOptionOverrides[] = (scope?.options as ReApplication)?.['re-application']?.ruleSetOptionOverrides;
       if (ruleSetOverrides && ruleSetOverrides.length > 0) {
         delegateOptions = {overrides: ruleSetOverrides};
       }

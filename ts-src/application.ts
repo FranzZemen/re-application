@@ -42,7 +42,7 @@ export class Application extends RuleElementFactory<RuleSet> {
     }
     this.refName = ref.refName;
 
-    const appRuleSetOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ReApplication)?.application?.ruleSetOptionOverrides;
+    const appRuleSetOptionOverrides: RuleOptionOverrides[] = (this.scope.options as ReApplication)?.['re-application']?.ruleSetOptionOverrides;
     ref.ruleSets.forEach(ruleSetRef => {
       let ruleSet: RuleSet;
       if (!ref.loadedScope) {
