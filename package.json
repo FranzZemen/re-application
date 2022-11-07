@@ -1,6 +1,6 @@
 {
   "name": "@franzzemen/re-application",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
   "type": "module",
   "main": "index.js",
@@ -40,7 +40,7 @@
     "@franzzemen/re-expression": "5.0.5",
     "@franzzemen/re-logical-condition": "1.0.3",
     "@franzzemen/re-rule": "4.0.5",
-    "@franzzemen/re-rule-set": "4.0.3",
+    "@franzzemen/re-rule-set": "4.0.4",
     "fastest-validator": "^1.15.0"
   }
 }
