@@ -1,4 +1,4 @@
-import {ExecutionContextI} from '@franzzemen/app-utility';
+import {LogExecutionContext} from '@franzzemen/logger-adapter';
 import {RuleSetStringifier} from '@franzzemen/re-rule-set';
 import {ApplicationReference} from '../application-reference.js';
 import {ApplicationScope} from '../scope/application-scope.js';
@@ -9,7 +9,7 @@ export class ApplicationStringifier {
   constructor() {
   }
 
-  stringify(appRef: ApplicationReference, scope: ApplicationScope, options?: StringifyApplicationOptions, ec?: ExecutionContextI) {
+  stringify(appRef: ApplicationReference, scope: ApplicationScope, options?: StringifyApplicationOptions, ec?: LogExecutionContext) {
     let stringified: string;
     // TODO stringify options
     if(appRef.refName.indexOf(' ') < 0) {
