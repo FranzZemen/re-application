@@ -44,10 +44,10 @@ export const npmu = (cb) => {
     }, {
       path: join(__dirname, '../re-rule'), packageName: '@franzzemen/re-rule'
     }, {
-    path: join(__dirname, '../re-rule-set'), packageName: '@franzzemen/re-rule-set',
-  }, {
-    path: join(__dirname, './'), packageName: '@franzzemen/re-application',
-  }])
+      path: join(__dirname, '../re-rule-set'), packageName: '@franzzemen/re-rule-set'
+    }, {
+      path: join(__dirname, './'), packageName: '@franzzemen/re-application'
+    }])
     .then(() => {
       console.log('cb...');
       cb();
